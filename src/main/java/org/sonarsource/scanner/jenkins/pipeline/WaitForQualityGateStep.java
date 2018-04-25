@@ -68,16 +68,20 @@ public class WaitForQualityGateStep extends Step implements Serializable {
   private String installationName;
   private String serverUrl;
   private boolean abortPipeline;
+  private String authToken;
 
   @DataBoundConstructor
-  public WaitForQualityGateStep(boolean abortPipeline) {
+  public WaitForQualityGateStep(boolean abortPipeline, String authToken) {
     super();
     this.abortPipeline = abortPipeline;
+    this.authToken = authToken;
   }
 
   public boolean isAbortPipeline() {
     return abortPipeline;
   }
+
+  public String getAuthToken() {return this.authToken;}
 
   public void setTaskId(String taskId) {
     this.taskId = taskId;
@@ -173,8 +177,11 @@ public class WaitForQualityGateStep extends Step implements Serializable {
       }
 
       log("Checking status of SonarQube task '%s' on server '%s'", step.taskId, step.getInstallationName());
+      if(step.getAuthToken() != "" )
+      {
 
-      WsClient wsClient = new WsClient(new HttpClient(), step.getServerUrl(), inst.getServerAuthenticationToken());
+      }
+      WsClient wsClient = new WsClient(new HttpClient(), step.getServerUrl(), step.getAuthToken() != null ? step.getAuthToken() : inst.getServerAuthenticationToken());
       WsClient.CETask ceTask = wsClient.getCETask(step.getTaskId());
       log("SonarQube task '%s' status is '%s'", step.taskId, ceTask.getStatus());
       switch (ceTask.getStatus()) {

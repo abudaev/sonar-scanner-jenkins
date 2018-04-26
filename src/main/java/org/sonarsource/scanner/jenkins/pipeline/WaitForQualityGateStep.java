@@ -43,6 +43,7 @@ import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
 import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.jenkinsci.plugins.workflow.support.actions.PauseAction;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 public class WaitForQualityGateStep extends Step implements Serializable {
 
@@ -71,17 +72,18 @@ public class WaitForQualityGateStep extends Step implements Serializable {
   private String authToken;
 
   @DataBoundConstructor
-  public WaitForQualityGateStep(boolean abortPipeline, String authToken) {
+  public WaitForQualityGateStep(boolean abortPipeline) {
     super();
     this.abortPipeline = abortPipeline;
-    this.authToken = authToken;
   }
+  @DataBoundSetter
+  public void setAuthToken(String authToken){this.authToken = authToken;}
+
+  public String getAuthToken() {return this.authToken;}
 
   public boolean isAbortPipeline() {
     return abortPipeline;
   }
-
-  public String getAuthToken() {return this.authToken;}
 
   public void setTaskId(String taskId) {
     this.taskId = taskId;
